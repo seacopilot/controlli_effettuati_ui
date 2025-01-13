@@ -1,291 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
   <head>
-    <title>Kendo Menu Laterale con Esito del Test</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DWC UI Mockup</title>
     <link
       href="https://kendo.cdn.telerik.com/themes/10.0.1/default/default-main.css"
       rel="stylesheet"
     />
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2024.4.1112/js/kendo.all.min.js"></script>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-      }
-
-      #menu-container {
-        width: 300px;
-        background: #f5f5f5;
-        border-right: 1px solid #ddd;
-        padding: 0;
-        height: 100vh;
-      }
-
-      #menu-container h2 {
-        margin: 0;
-        padding: 15px;
-        color: white;
-        background-color: #f56b00;
-        text-align: center;
-      }
-
-      #menu {
-        width: 100%;
-      }
-
-      .menu-icon {
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        margin-right: 10px;
-        vertical-align: middle;
-      }
-
-      .icon-success {
-        background-image: url("https://img.icons8.com/color/48/000000/checkmark.png");
-        background-size: cover;
-      }
-
-      .icon-warning {
-        background-image: url("https://img.icons8.com/color/48/000000/warning-shield.png");
-        background-size: cover;
-      }
-
-      .icon-fail {
-        background-image: url("https://img.icons8.com/color/48/000000/cancel.png");
-        background-size: cover;
-      }
-
-      .k-menu .k-link {
-        display: flex;
-        align-items: center;
-      }
-
-      .k-menu-expand-arrow .k-icon {
-        margin-right: 10px !important;
-      }
-
-      #content-container {
-        flex: 1;
-        padding: 20px;
-        overflow: auto;
-      }
-
-      .menu-section {
-        font-weight: bold;
-      }
-
-      .k-menu {
-        background: #f5f5f5;
-        border: none;
-      }
-
-      .k-menu .k-item > .k-link {
-        padding: 10px 20px;
-      }
-
-      .k-menu .k-item:hover {
-        background: #f56b00;
-        color: white;
-      }
-
-      .k-menu .k-item > .k-link:hover {
-        color: white;
-      }
-
-      .k-menu .k-item .k-group {
-        background: white;
-        border: 1px solid #ddd;
-      }
-
-      .k-group .k-item:hover {
-        background: #f56b00;
-        color: white;
-      }
-    </style>
+    <script src="https://kendo.cdn.telerik.com/2023.1.314/js/kendo.all.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="script.js"></script>
   </head>
   <body>
-    <div id="menu-container">
-      <h2>Controlli effettuati</h2>
-      <ul id="menu"></ul>
+    <div class="banner">DWC UI</div>
+
+    <div id="datiInput">
+      <div class="container">
+        <div class="left-panel">
+          <div class="input-group">
+            <label for="identificativo">Identificativo:</label>
+            <input
+              type="text"
+              id="identificativo"
+              placeholder="Identificativo"
+            />
+          </div>
+          <div class="input-group">
+            <label for="nazionalita">Nazionalità:</label>
+            <select id="nazionalita">
+              <option>Seleziona...</option>
+              <option>Italiana</option>
+              <option>Estera</option>
+            </select>
+          </div>
+          <div id="treeview"></div>
+        </div>
+        <div class="right-panel">
+          <button id="btnRicerca" class="button">Avvia Ricerca</button>
+          <button id="btnReset" class="button" style="background-color: grey">
+            Reset
+          </button>
+        </div>
+      </div>
     </div>
-    <div id="content-container">
-      <h3>A RAYMOND ET COMPAGNIE</h3>
+
+    <div id="analisi">
+      <div id="splitter">
+        <div id="storico">
+          <h3>Storico Analisi</h3>
+          <div id="grid"></div>
+        </div>
+        <div id="dettagli">
+          <div style="display: flex; width: 100%">
+            <div id="menu-container">
+              <h2>Controlli effettuati</h2>
+              <ul id="menu"></ul>
+            </div>
+            <div id="content-container">
+              <h3></h3>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <script>
-      $(document).ready(function () {
-        // Funzione per determinare lo stato del primo livello
-        function determineParentStatus(items) {
-          let allSuccess = true;
-          let allFail = true;
-
-          items.forEach((item) => {
-            if (item.iconClass === "icon-fail") {
-              allSuccess = false;
-            }
-            if (item.iconClass === "icon-success") {
-              allFail = false;
-            }
-          });
-
-          if (allSuccess) {
-            return "icon-success";
-          } else if (allFail) {
-            return "icon-fail";
-          } else {
-            return "icon-warning";
-          }
-        }
-
-        // Dati del menu basati su treeData con esito dei test
-        const treeData = [
-          {
-            text: "Reputazionale",
-            items: [
-              {
-                text: "Verifica notizie di stampa negative",
-                iconClass: "icon-success",
-                encoded: false,
-              },
-              {
-                text: "Verifica liste PEP",
-                iconClass: "icon-success",
-                encoded: false,
-              },
-              {
-                text: "Verifica assenza soggetti sottoposti a sanzioni adottate dall'Unione Europea",
-                iconClass: "icon-fail",
-                encoded: false,
-              },
-              {
-                text: "Clienti attenzionati",
-                iconClass: "icon-warning",
-                encoded: false,
-              },
-              {
-                text: "Verifica Questionario Paesi Maggiormente Sanzionati",
-                iconClass: "icon-success",
-                encoded: false,
-              },
-            ],
-          },
-          {
-            text: "Anagrafica (soggetti)",
-            items: [
-              {
-                text: "Verifica titolare effettivo",
-                iconClass: "icon-success",
-                encoded: false,
-              },
-              {
-                text: "Verifica Legale rappresentante",
-                iconClass: "icon-fail",
-                encoded: false,
-              },
-              {
-                text: "Verifica amministrazione impresa",
-                iconClass: "icon-warning",
-                encoded: false,
-              },
-              {
-                text: "Verifica residenza esponenti impresa richiedente",
-                iconClass: "icon-fail",
-                encoded: false,
-              },
-            ],
-          },
-          {
-            text: "Anagrafica (impresa richiedente)",
-            items: [
-              {
-                text: "Catena Partecipativa",
-                iconClass: "icon-success",
-                encoded: false,
-              },
-              {
-                text: "Verifica sede legale",
-                iconClass: "icon-fail",
-                encoded: false,
-              },
-              {
-                text: "Verifica struttura societaria",
-                iconClass: "icon-warning",
-                encoded: false,
-              },
-              {
-                text: "Verifica misure di prevenzione patrimoniali, protesti e atti di conservatoria",
-                iconClass: "icon-fail",
-                encoded: false,
-              },
-            ],
-          },
-          {
-            text: "Controlli sul bilancio",
-            items: [
-              {
-                text: "Attività vs voci di bilancio",
-                iconClass: "icon-success",
-                encoded: false,
-              },
-              {
-                text: "Ricavo per addetto",
-                iconClass: "icon-warning",
-                encoded: false,
-              },
-              {
-                text: "Andamento dei ricavi",
-                iconClass: "icon-fail",
-                encoded: false,
-              },
-            ],
-          },
-          {
-            text: "Altro",
-            items: [
-              {
-                text: "Verifiche conflitti di interesse",
-                iconClass: "icon-warning",
-                encoded: false,
-              },
-              { text: "Verifica IBAN", iconClass: "icon-fail", encoded: false },
-              {
-                text: "Verifica CUP",
-                iconClass: "icon-success",
-                encoded: false,
-              },
-              {
-                text: "Controlli amministrativi, contabili e di performance",
-                iconClass: "icon-success",
-                encoded: false,
-              },
-            ],
-          },
-        ];
-
-        // Aggiunta degli indicatori di stato al primo livello
-        const menuData = treeData.map((area) => {
-          const statusIcon = determineParentStatus(area.items);
-          return {
-            text: `<span class="menu-icon ${statusIcon}"></span>${area.text}`,
-            encoded: false,
-            items: area.items.map((item) => ({
-              text: `<span class="menu-icon ${item.iconClass}"></span>${item.text}`,
-              encoded: false,
-            })),
-          };
-        });
-
-        // Inizializza il Kendo Menu
-        $("#menu").kendoMenu({
-          dataSource: menuData,
-          orientation: "vertical",
-          openOnClick: true, // Sottomenu si apre al click
-        });
-      });
-    </script>
   </body>
 </html>
